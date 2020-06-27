@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const app = require("");
 
 const customerSchema = new mongoose.Schema({
   firstName: {
@@ -8,6 +7,19 @@ const customerSchema = new mongoose.Schema({
   },
   lastName: {
     type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  isGold: {
+    type: Boolean,
     required: true,
   },
 });
