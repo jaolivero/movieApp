@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const genres = require("./models/routes/genre");
-const customers = require("./models/routes/customers");
+const genres = require("./routes/genres");
+const customers = require("./routes/customers");
 const express = require("express");
 const app = express();
 
@@ -9,7 +9,7 @@ app.use("/api/genres", genres);
 app.use("/api/customers", customers);
 
 mongoose
-  .connect("mongodb://localhost/movieApp")
+  .connect("mongodb://localhost/movieApp", { useNewUrlParser: true })
   .then(() => console.log("connected to MongoDb.."))
   .catch((err) => console.error("Could not connect to mongodb...", err));
 

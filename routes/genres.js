@@ -21,11 +21,11 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { error } = validatiateGenre(req.body);
+  const { error } = validateGenre(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   let genre = new Genre({ name: req.body.name });
-  genres.save();
+  genre = await genre.save();
   res.send(genre);
 });
 
@@ -67,7 +67,7 @@ router.get("/:id", async (req, res) => {
 
 function validateGenre(genre) {
   const schema = {
-    name: Joi.String().min(3).require(),
+    name: Joi.string().min(3).max(50).required(),
   };
 
   return Joi.validate(genre, schema);
