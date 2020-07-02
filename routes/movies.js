@@ -1,21 +1,32 @@
 const mongoose = require("mongoose");
+const { Genre } = require("..models/genre");
 const express = require("express");
 const router = express.Router();
-const { Genre, validate, genreSchema } = require("../models/genre");
+const { Movie, validate } = require("../models/movie");
 
 router.get("/", async (req, res) => {
-  const genres = await Genre.find().sort("name");
-  res.send(genres);
+  const movies = await Genre.find().sort("name");
+  res.send(movies);
 });
 
 router.post("/", async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  let genre = new Genre({ name: req.body.name });
-  genre = await genre.save();
-  res.send(genre);
-});
+  const genre = await Genre.findByID(req.body.genreId);
+  if(!genre) return res.status(400)
+  res.send(genre).send('Invalid genre.');
+
+  let movie = new Movie({
+      title: req.body.title,
+      genre: {
+          _id: genre._id,
+          name: genre.name
+      },
+      numberinStock: req.body.numberInStock,
+      dailyRentalRate: req.body.dailyRentalRate
+  });
+  movie = await movie.save();
 
 router.put("/:id", async (req, res) => {
   const { error } = validate(req.body);
