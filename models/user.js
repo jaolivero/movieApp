@@ -33,7 +33,8 @@ function validateUser(user) {
     email: Joi.string().min(5).max(255).required().email(),
     password: Joi.string().min(5).max(255).required(),
   };
-  return Joi.validate(genre, schema);
+  return Joi.validate(user, schema);
 }
 
-model.exports.User = User;
+module.exports.User = User;
+module.exports.validate = validateUser;
