@@ -4,7 +4,7 @@ const { genreSchema } = require("./genre");
 
 const Movie = mongoose.model(
   "Movies",
-  new mongoose.schema({
+  new mongoose.Schema({
     title: {
       type: String,
       required: true,
@@ -23,7 +23,7 @@ const Movie = mongoose.model(
       max: 255,
     },
     dailyRentalRate: {
-      tpye: Number,
+      type: Number,
       required: true,
       min: 0,
       max: 255,
