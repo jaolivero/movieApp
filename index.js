@@ -1,44 +1,12 @@
-require("express-async-errors");
-const winston = require("winston");
-require("winston-mongodb");
-const error = require("./middleware/error");
-const config = require("config");
-const Joi = require("joi");
-Joi.objectId = require("joi-objectid")(Joi);
-const mongoose = require("mongoose");
-const genres = require("./routes/genres");
-const customers = require("./routes/customers");
-const movies = require("./routes/movies");
-const rentals = require("./routes/rentals");
-const users = require("./routes/users");
-const auth = require("./routes/auth");
-const express = require("express");
+const winston = require('winston');
+const express = require('express');
 const app = express();
 
-winston.add(new winston.transports.File({ filename: "logfile.log" }));
-winston.add(new winston.transports.MongoDB(), {
-  db: "mongodb://localhost/movieApp",
-  level: "info",
-});
-
-if (!config.jwtPrivateKey) {
-  console.error("FATAL ERROR: jwtPrivateKey is not defined.");
-  process.exit(1);
-}
-
-mongoose
-  .connect("mongodb://localhost/movieApp", { useNewUrlParser: true })
-  .then(() => console.log("connected to MongoDb.."))
-  .catch((err) => console.error("Could not connect to mongodb...", err));
-
-app.use(express.json());
-app.use("/api/genres", genres);
-app.use("/api/customers", customers);
-app.use("/api/movies", movies);
-app.use("/api/rentals", rentals);
-app.use("/api/users", users);
-app.use("/api/auth", auth);
-app.use(error);
+require('./startup/logging');
+require('./startup/routes')(app);
+require('./startup/db')();
+require('.startup/config')();
+require('.startup/validation')();
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Server started on port ${port}...`));
+app.listen(port, () => winston.info(`Server started on port ${port}...`));
